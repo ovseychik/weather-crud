@@ -1,0 +1,93 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: s.ovseychik
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: city
+      changes:
+        - createTable:
+            tableName: city
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: country
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: latitude
+                  type: decimal(10,8)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: longitude
+                  type: decimal(11,8)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValue: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValue: CURRENT_TIMESTAMP
+
+  - changeSet:
+      id: 2
+      author: s.ovseychik
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - indexExists:
+                indexName: idx_city_name
+      changes:
+        - createIndex:
+            indexName: idx_city_name
+            tableName: city
+            columns:
+              - column:
+                  name: name
+
+  - changeSet:
+      id: 3
+      author: s.ovseychik
+      changes:
+        - sql:
+            sql: |
+              CREATE OR REPLACE FUNCTION update_updated_at_column()
+              RETURNS TRIGGER AS $$
+              BEGIN
+                  NEW.updated_at = CURRENT_TIMESTAMP;
+                  RETURN NEW;
+              END $$ language 'plpgsql';
+
+  - changeSet:
+      id: 4
+      author: s.ovseychik
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sqlCheck:
+                expectedResult: 1
+                sql: SELECT COUNT(*) FROM pg_trigger WHERE tgname = 'update_city_updated_at'
+      changes:
+        - sql:
+            sql: |
+              CREATE TRIGGER update_city_updated_at
+                  BEFORE UPDATE ON city
+                  FOR EACH ROW
+                  EXECUTE FUNCTION update_updated_at_column();

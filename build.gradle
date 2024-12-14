@@ -1,0 +1,121 @@
+plugins {
+  id 'java'
+  id 'org.springframework.boot' version '3.4.0'
+  id 'io.spring.dependency-management' version '1.1.6'
+  id 'nu.studer.jooq' version '9.0'
+  id 'org.liquibase.gradle' version '2.2.2'
+}
+
+group = 'kz.test'
+version = '0.0.1-SNAPSHOT'
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+  // Database
+  implementation 'org.postgresql:postgresql:42.7.4'
+  implementation 'org.springframework.boot:spring-boot-starter-jooq'
+
+  // Liquibase
+  implementation 'org.liquibase:liquibase-core:4.26.0'
+  liquibaseRuntime 'org.liquibase:liquibase-core:4.26.0'
+  liquibaseRuntime 'info.picocli:picocli:4.7.5'
+  liquibaseRuntime 'org.yaml:snakeyaml:2.2'
+  liquibaseRuntime 'org.postgresql:postgresql:42.7.4'
+
+  // jOOQ
+  jooqGenerator 'org.postgresql:postgresql:42.7.2'
+  implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+  implementation 'org.jooq:jooq:3.19.16'
+
+  implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.4.0'
+  implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+  implementation 'io.micrometer:micrometer-registry-prometheus'
+
+  compileOnly 'org.projectlombok:lombok'
+  annotationProcessor 'org.projectlombok:lombok'
+
+  // Test
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'io.projectreactor:reactor-test'
+  testImplementation 'org.testcontainers:postgresql'
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
+}
+
+liquibase {
+  activities {
+    main {
+      changelogFile 'src/main/resources/db/changelog/db.changelog-master.yaml'
+      url 'jdbc:postgresql://localhost:5432/weather_db'
+      username 'weather_user'
+      password 'weather_pass'
+      driver 'org.postgresql.Driver'
+    }
+  }
+  runList = 'main'
+}
+
+jooq {
+  version = '3.19.16'
+  configurations {
+    main {
+      generateSchemaSourceOnCompilation = true
+
+      generationTool {
+        jdbc {
+          driver = 'org.postgresql.Driver'
+          url = 'jdbc:postgresql://localhost:5432/weather_db'
+          user = 'weather_user'
+          password = 'weather_pass'
+        }
+
+        generator {
+          database {
+            name = 'org.jooq.meta.postgres.PostgresDatabase'
+            inputSchema = 'public'
+            includes = '.*'
+            excludes = 'flyway_schema_history'
+          }
+
+          generate {
+            deprecated = false
+            records = true
+            immutablePojos = true
+            fluentSetters = true
+          }
+
+          target {
+            packageName = 'kz.test.weather.jooq.generated'
+            directory = 'build/generated-src/jooq/main'
+          }
+        }
+      }
+    }
+  }
+}
+
+tasks.named('generateJooq').configure {
+  dependsOn tasks.named('update')
+  outputs.dir 'build/generated-src/jooq/main'
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs += ['build/generated-src/jooq/main']
+    }
+  }
+}
