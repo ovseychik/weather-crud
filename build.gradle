@@ -21,6 +21,9 @@ repositories {
 
 dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-webflux'
+  implementation 'com.playtika.reactivefeign:feign-reactor-spring-cloud-starter:4.2.1'
+  implementation 'com.playtika.reactivefeign:feign-reactor-spring-configuration:4.2.1'
+  implementation 'com.playtika.reactivefeign:feign-reactor-webclient:4.2.1'
 
   // Database
   implementation 'org.postgresql:postgresql:42.7.4'
@@ -41,7 +44,6 @@ dependencies {
 
   implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.4.0'
   implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.4.0'
-  implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
   implementation 'io.micrometer:micrometer-registry-prometheus'
 
   compileOnly 'org.projectlombok:lombok'
@@ -80,7 +82,6 @@ jooq {
   configurations {
     main {
       generateSchemaSourceOnCompilation = true
-
       generationTool {
         jdbc {
           driver = 'org.postgresql.Driver'
@@ -88,7 +89,6 @@ jooq {
           user = 'weather_user'
           password = 'weather_pass'
         }
-
         generator {
           database {
             name = 'org.jooq.meta.postgres.PostgresDatabase'
@@ -96,14 +96,12 @@ jooq {
             includes = '.*'
             excludes = 'databasechangelog|databasechangeloglock'
           }
-
           generate {
             deprecated = false
             records = true
             immutablePojos = true
             fluentSetters = true
           }
-
           target {
             packageName = 'kz.test.weather.jooq.generated'
             directory = 'build/generated-src/jooq/main'
