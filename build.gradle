@@ -57,6 +57,10 @@ tasks.named('test') {
   useJUnitPlatform()
 }
 
+tasks.named('compileJava').configure {
+  dependsOn generateJooq
+}
+
 liquibase {
   activities {
     main {
@@ -111,7 +115,7 @@ jooq {
 }
 
 tasks.named('generateJooq').configure {
-  dependsOn tasks.named('update')
+  dependsOn update
   outputs.dir 'build/generated-src/jooq/main'
 }
 
