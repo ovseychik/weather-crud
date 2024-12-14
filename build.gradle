@@ -37,7 +37,9 @@ dependencies {
   jooqGenerator 'org.postgresql:postgresql:42.7.2'
   implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
   implementation 'org.jooq:jooq:3.19.16'
+  implementation "org.jooq:jooq-meta-extensions-liquibase:3.19.16"
 
+  implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.4.0'
   implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.4.0'
   implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
   implementation 'io.micrometer:micrometer-registry-prometheus'
@@ -58,7 +60,8 @@ tasks.named('test') {
 liquibase {
   activities {
     main {
-      changelogFile 'src/main/resources/db/changelog/db.changelog-master.yaml'
+      searchPath 'src/main/resources'
+      changelogFile 'db/changelog/db.changelog-master.yaml'
       url 'jdbc:postgresql://localhost:5432/weather_db'
       username 'weather_user'
       password 'weather_pass'
