@@ -94,7 +94,7 @@ jooq {
             name = 'org.jooq.meta.postgres.PostgresDatabase'
             inputSchema = 'public'
             includes = '.*'
-            excludes = 'flyway_schema_history'
+            excludes = 'databasechangelog|databasechangeloglock'
           }
 
           generate {
