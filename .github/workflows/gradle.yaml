@@ -10,6 +10,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   WEATHERAPI_KEY: ${{secrets.WEATHERAPI_KEY}}
+  DB_HOST: localhost
 
 jobs:
   build:
