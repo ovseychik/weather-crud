@@ -10,7 +10,6 @@ import kz.test.weathercrud.repository.weather.WeatherCacheRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
@@ -24,41 +23,43 @@ public class WeatherServiceImpl implements WeatherService {
   private final WeatherCacheRepository cacheRepository;
   private final ObjectMapper objectMapper;
 
-  public Mono<WeatherResponse> getCurrentWeather(Long cityId, Double latitude, Double longitude) {
-    return Mono.justOrEmpty(cacheRepository.findValidCache(cityId, "current"))
-        .map(cached -> objectMapper.convertValue(cached, WeatherResponse.class))
-        .switchIfEmpty(fetchAndCacheCurrentWeather(cityId, latitude, longitude));
+  public WeatherResponse getCurrentWeather(Long cityId, Double latitude, Double longitude) {
+    var cached = cacheRepository.findValidCache(cityId, "current");
+    if (cached.isPresent()) {
+      return objectMapper.convertValue(cached, WeatherResponse.class);
+    }
+    return fetchAndCacheCurrentWeather(cityId, latitude, longitude);
   }
 
-  private Mono<WeatherResponse> fetchAndCacheCurrentWeather(Long cityId, Double latitude, Double longitude) {
+  private WeatherResponse fetchAndCacheCurrentWeather(Long cityId, Double latitude, Double longitude) {
     String location = String.format("%f,%f", latitude, longitude);
-    return weatherApiClient.getCurrentWeather(location)
-        .doOnSuccess(response -> {
-          try {
-            JsonNode jsonNode = objectMapper.valueToTree(response);
-            cacheRepository.saveCache(cityId, "current", jsonNode, CURRENT_WEATHER_TTL);
-          } catch (Exception e) {
-            log.error("Failed to cache weather data", e);
-          }
-        });
+    WeatherResponse response = weatherApiClient.getCurrentWeather(location);
+    try {
+      JsonNode jsonNode = objectMapper.valueToTree(response);
+      cacheRepository.saveCache(cityId, "current", jsonNode, CURRENT_WEATHER_TTL);
+    } catch (Exception e) {
+      log.error("Failed to cache weather data", e);
+    }
+    return response;
   }
 
-  public Mono<ForecastResponse> getForecast(Long cityId, Double latitude, Double longitude, Integer days) {
-    return Mono.justOrEmpty(cacheRepository.findValidCache(cityId, "forecast_" + days))
-        .map(cached -> objectMapper.convertValue(cached, ForecastResponse.class))
-        .switchIfEmpty(fetchAndCacheForecast(cityId, latitude, longitude, days));
+  public ForecastResponse getForecast(Long cityId, Double latitude, Double longitude, Integer days) {
+    var cached = cacheRepository.findValidCache(cityId, "forecast_" + days);
+    if (cached.isPresent()) {
+      return objectMapper.convertValue(cached, ForecastResponse.class);
+    }
+    return fetchAndCacheForecast(cityId, latitude, longitude, days);
   }
 
-  private Mono<ForecastResponse> fetchAndCacheForecast(Long cityId, Double latitude, Double longitude, Integer days) {
+  private ForecastResponse fetchAndCacheForecast(Long cityId, Double latitude, Double longitude, Integer days) {
     String location = String.format("%f,%f", latitude, longitude);
-    return weatherApiClient.getForecast(location, days, "no", "no")
-        .doOnSuccess(response -> {
-          try {
-            JsonNode jsonNode = objectMapper.valueToTree(response);
-            cacheRepository.saveCache(cityId, "forecast_" + days, jsonNode, FORECAST_TTL);
-          } catch (Exception e) {
-            log.error("Failed to cache forecast data", e);
-          }
-        });
+    ForecastResponse response = weatherApiClient.getForecast(location, days, "no", "no");
+    try {
+      JsonNode jsonNode = objectMapper.valueToTree(response);
+      cacheRepository.saveCache(cityId, "forecast_" + days, jsonNode, FORECAST_TTL);
+    } catch (Exception e) {
+      log.error("Failed to cache forecast data", e);
+    }
+    return response;
   }
 }

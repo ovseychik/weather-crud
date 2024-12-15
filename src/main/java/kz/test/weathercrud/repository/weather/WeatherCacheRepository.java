@@ -6,9 +6,9 @@ import java.util.Optional;
 
 public interface WeatherCacheRepository {
 
-  public Optional<JsonNode> findValidCache(Long cityId, String weatherType);
+  Optional<JsonNode> findValidCache(Long cityId, String weatherType);
 
-  public void saveCache(Long cityId, String weatherType, JsonNode responseData, Duration ttl);
+  void saveCache(Long cityId, String weatherType, JsonNode responseData, Duration ttl);
 
-  public void cleanupExpiredCache();
+  void cleanupExpiredCache();
 }
