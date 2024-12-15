@@ -8,18 +8,29 @@
 # Стек
 
 * Java 17
+* Spring Boot
+
+Persistence:
+
 * jOOQ
+* PostgreSQL
+* Liquibase
 
 # Как запустить
 
-* [ ] API key
-* [ ] Docker compose
+Ключ API сервиса погоды был передан вместе со ссылкой на репозиторий.
 
 ## Локально
 
-### Из Intellij
+Необходимо указать ключ API в переменных окружения. Это можно легко сделать через IntelliJ, изменив конфиграцию запуска,
+как показано на скриншоте.
 
 ### Из docker-compose
+
+Репозиторий содержит [docker-compose.yml](docker-compose.yml), который поможет подготовить БД и запустить контейнер с
+проектом.
+
+При желании, приложение можно запустить как обычное Spring Boot приложение, нажав Run в IntelliJ.
 
 # Документация
 
@@ -34,7 +45,7 @@ http://localhost:8080/webjars/swagger-ui/index.html
 
 * сборка проекта в gradle
 * тестирование
-* упаковка в docker образ
+* публикация в виде jar пакета в репозитории https://github.com/ovseychik/weather-crud/packages
 
 Для репозитория настроено автоматическое сканирование в SonarCloud. Актуальный отчёт сонара:
 
