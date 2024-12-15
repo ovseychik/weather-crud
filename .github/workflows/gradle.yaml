@@ -6,11 +6,19 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  WEATHERAPI_KEY: ${{secrets.WEATHERAPI_KEY}}
+  DB_HOST: localhost
+
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: write
     services:
       postgres:
         image: postgres:17-alpine
@@ -37,17 +45,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4.2.1
       - name: Build with Gradle Wrapper
         run: ./gradlew build
-
-  dependency-submission:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-      - name: Generate and submit dependency graph
-        uses: gradle/actions/dependency-submission@v4.2.1
+      - name: Publish to GitHub Packages
+        run: ./gradlew publish
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}

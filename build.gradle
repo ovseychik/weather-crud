@@ -4,6 +4,9 @@ plugins {
   id 'io.spring.dependency-management' version '1.1.6'
   id 'nu.studer.jooq' version '9.0'
   id 'org.liquibase.gradle' version '2.2.2'
+  id 'jacoco'
+  id 'org.sonarqube' version '6.0.1.5171'
+  id 'maven-publish'
 }
 
 group = 'kz.test'
@@ -61,12 +64,46 @@ tasks.named('compileJava').configure {
   dependsOn generateJooq
 }
 
+sonar {
+  properties {
+    property "sonar.projectKey", "ovseychik_weather-crud"
+    property "sonar.organization", "ovseychik"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
+
+jacocoTestReport {
+  reports {
+    xml.required = true
+  }
+}
+
+publishing {
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/ovseychik/weather-crud")
+      credentials {
+        username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+        password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+      }
+    }
+  }
+  publications {
+    gpr(MavenPublication) {
+      from(components.java)
+    }
+  }
+}
+
+String dbHost = System.getenv('DB_HOST') ?: 'localhost'
+
 liquibase {
   activities {
     main {
       searchPath 'src/main/resources'
       changelogFile 'db/changelog/db.changelog-master.yaml'
-      url 'jdbc:postgresql://localhost:5432/weather_db'
+      url 'jdbc:postgresql://' + dbHost + ':5432/weather_db'
       username 'weather_user'
       password 'weather_pass'
       driver 'org.postgresql.Driver'
@@ -83,7 +120,7 @@ jooq {
       generationTool {
         jdbc {
           driver = 'org.postgresql.Driver'
-          url = 'jdbc:postgresql://localhost:5432/weather_db'
+          url = 'jdbc:postgresql://' + dbHost + ':5432/weather_db'
           user = 'weather_user'
           password = 'weather_pass'
         }

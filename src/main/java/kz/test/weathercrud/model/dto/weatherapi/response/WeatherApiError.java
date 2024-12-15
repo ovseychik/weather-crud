@@ -7,4 +7,5 @@ public class WeatherApiError {
 
   private Integer code;
   private String message;
+  private String error;
 }
