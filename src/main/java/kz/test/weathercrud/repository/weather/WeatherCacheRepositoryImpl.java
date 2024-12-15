@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
@@ -16,13 +17,10 @@ import org.springframework.stereotype.Repository;
 
 @Slf4j
 @Repository
+@RequiredArgsConstructor
 public class WeatherCacheRepositoryImpl implements WeatherCacheRepository {
 
   private final DSLContext dsl;
-
-  public WeatherCacheRepositoryImpl(DSLContext dsl) {
-    this.dsl = dsl;
-  }
 
   public Optional<JsonNode> findValidCache(Long cityId, String weatherType) {
     return dsl.select(WEATHER_CACHE.RESPONSE_DATA)
