@@ -63,6 +63,20 @@ tasks.named('compileJava').configure {
   dependsOn generateJooq
 }
 
+sonar {
+  properties {
+    property "sonar.projectKey", "ovseychik_weather-crud"
+    property "sonar.organization", "ovseychik"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
+
+jacocoTestReport {
+  reports {
+    xml.required = true
+  }
+}
+
 liquibase {
   activities {
     main {
