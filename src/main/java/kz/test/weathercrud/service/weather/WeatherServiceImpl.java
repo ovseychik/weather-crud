@@ -2,6 +2,7 @@ package kz.test.weathercrud.service.weather;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.math.BigDecimal;
 import java.time.Duration;
 import kz.test.weathercrud.client.WeatherApiClient;
 import kz.test.weathercrud.model.dto.weatherapi.response.ForecastResponse;
@@ -23,7 +24,7 @@ public class WeatherServiceImpl implements WeatherService {
   private final WeatherCacheRepository cacheRepository;
   private final ObjectMapper objectMapper;
 
-  public WeatherResponse getCurrentWeather(Long cityId, Double latitude, Double longitude) {
+  public WeatherResponse getCurrentWeather(Long cityId, BigDecimal latitude, BigDecimal longitude) {
     var cached = cacheRepository.findValidCache(cityId, "current");
     if (cached.isPresent()) {
       return objectMapper.convertValue(cached, WeatherResponse.class);
@@ -31,7 +32,7 @@ public class WeatherServiceImpl implements WeatherService {
     return fetchAndCacheCurrentWeather(cityId, latitude, longitude);
   }
 
-  private WeatherResponse fetchAndCacheCurrentWeather(Long cityId, Double latitude, Double longitude) {
+  private WeatherResponse fetchAndCacheCurrentWeather(Long cityId, BigDecimal latitude, BigDecimal longitude) {
     String location = String.format("%f,%f", latitude, longitude);
     WeatherResponse response = weatherApiClient.getCurrentWeather(location);
     try {
@@ -43,7 +44,7 @@ public class WeatherServiceImpl implements WeatherService {
     return response;
   }
 
-  public ForecastResponse getForecast(Long cityId, Double latitude, Double longitude, Integer days) {
+  public ForecastResponse getForecast(Long cityId, BigDecimal latitude, BigDecimal longitude, Integer days) {
     var cached = cacheRepository.findValidCache(cityId, "forecast_" + days);
     if (cached.isPresent()) {
       return objectMapper.convertValue(cached, ForecastResponse.class);
@@ -51,7 +52,7 @@ public class WeatherServiceImpl implements WeatherService {
     return fetchAndCacheForecast(cityId, latitude, longitude, days);
   }
 
-  private ForecastResponse fetchAndCacheForecast(Long cityId, Double latitude, Double longitude, Integer days) {
+  private ForecastResponse fetchAndCacheForecast(Long cityId, BigDecimal latitude, BigDecimal longitude, Integer days) {
     String location = String.format("%f,%f", latitude, longitude);
     ForecastResponse response = weatherApiClient.getForecast(location, days, "no", "no");
     try {
