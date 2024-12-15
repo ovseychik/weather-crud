@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: s.ovseychik
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: weather_cache
+      changes:
+        - createTable:
+            tableName: weather_cache
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: city_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_weather_cache_city
+                    references: city(id)
+              - column:
+                  name: weather_type
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: response_data
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: expires_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            indexName: idx_weather_cache_city_type
+            tableName: weather_cache
+            columns:
+              - column:
+                  name: city_id
+              - column:
+                  name: weather_type
+
+        - createIndex:
+            indexName: idx_weather_cache_expires
+            tableName: weather_cache
+            columns:
+              - column:
+                  name: expires_at
