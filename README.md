@@ -25,6 +25,9 @@ Persistence:
 Необходимо указать ключ API в переменных окружения. Это можно легко сделать через IntelliJ, изменив конфиграцию запуска,
 как показано на скриншоте.
 
+<img width="1610" alt="Screenshot 2024-12-15 at 18 39 12" src="https://github.com/user-attachments/assets/80762480-e40c-4383-8469-42edc9bf5a35" />
+
+
 ## Из docker-compose
 
 Репозиторий содержит [docker-compose.yml](docker-compose.yml), который поможет подготовить БД и запустить контейнер с
