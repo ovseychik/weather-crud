@@ -7,8 +7,8 @@ COPY build.gradle settings.gradle ./
 COPY src ./src
 COPY gradle ./gradle
 
-ENV SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/weather_db
-ENV DB_HOST=host.docker.internal
+ENV SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/weather_db
+ENV DB_HOST=postgres
 
 RUN gradle build --no-daemon -x test
 
