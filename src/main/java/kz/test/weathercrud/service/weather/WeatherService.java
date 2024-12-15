@@ -1,11 +1,12 @@
 package kz.test.weathercrud.service.weather;
 
+import java.math.BigDecimal;
 import kz.test.weathercrud.model.dto.weatherapi.response.ForecastResponse;
 import kz.test.weathercrud.model.dto.weatherapi.response.WeatherResponse;
 
 public interface WeatherService {
 
-  public WeatherResponse getCurrentWeather(Long cityId, Double latitude, Double longitude);
+  WeatherResponse getCurrentWeather(Long cityId, BigDecimal latitude, BigDecimal longitude);
 
-  public ForecastResponse getForecast(Long cityId, Double latitude, Double longitude, Integer days);
+  ForecastResponse getForecast(Long cityId, BigDecimal latitude, BigDecimal longitude, Integer days);
 }

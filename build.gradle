@@ -21,9 +21,6 @@ repositories {
 
 dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-webflux'
-//  implementation 'com.playtika.reactivefeign:feign-reactor-spring-cloud-starter:4.2.1'
-//  implementation 'com.playtika.reactivefeign:feign-reactor-spring-configuration:4.2.1'
-//  implementation 'com.playtika.reactivefeign:feign-reactor-webclient:4.2.1'
   implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.2.0'
 
   // Database
@@ -43,8 +40,8 @@ dependencies {
   implementation 'org.jooq:jooq:3.19.16'
   implementation "org.jooq:jooq-meta-extensions-liquibase:3.19.16"
 
-  implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.4.0'
-  implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.4.0'
+  implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.7.0'
+  implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.7.0'
   implementation 'io.micrometer:micrometer-registry-prometheus'
 
   compileOnly 'org.projectlombok:lombok'
