@@ -19,7 +19,8 @@ public class WeatherApiErrorDecoder implements ErrorDecoder {
       String responseBody = IOUtils.toString(response.body().asInputStream());
       WeatherApiError error = objectMapper.readValue(responseBody, WeatherApiError.class);
 
-      log.error("Weather API error: code={}, message={}", error.getCode(), error.getMessage());
+      log.error("Weather API error: code={}, message={}, error={}", error.getCode(), error.getMessage(),
+          error.getError());
       return new WeatherApiException(error.getCode(), error.getMessage());
     } catch (IOException e) {
       log.error("Failed to decode error response", e);

@@ -96,12 +96,14 @@ publishing {
   }
 }
 
+String dbHost = System.getenv('DB_HOST') ?: 'localhost'
+
 liquibase {
   activities {
     main {
       searchPath 'src/main/resources'
       changelogFile 'db/changelog/db.changelog-master.yaml'
-      url 'jdbc:postgresql://localhost:5432/weather_db'
+      url 'jdbc:postgresql://' + dbHost + ':5432/weather_db'
       username 'weather_user'
       password 'weather_pass'
       driver 'org.postgresql.Driver'
@@ -118,7 +120,7 @@ jooq {
       generationTool {
         jdbc {
           driver = 'org.postgresql.Driver'
-          url = 'jdbc:postgresql://localhost:5432/weather_db'
+          url = 'jdbc:postgresql://' + dbHost + ':5432/weather_db'
           user = 'weather_user'
           password = 'weather_pass'
         }
