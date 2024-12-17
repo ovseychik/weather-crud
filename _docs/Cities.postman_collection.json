@@ -1,0 +1,84 @@
+{
+  "info": {
+    "_postman_id": "ccc2ee5e-dbeb-4472-a123-5616d701f421",
+    "name": "Cities",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "30117357"
+  },
+  "item": [
+    {
+      "name": "cities",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/cities/",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "cities",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "cities/{id}",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/cities/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "cities",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "cities/",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"ALmaty\",\n    \"country\": \"KZ\",\n    \"latitude\": 43.14,\n    \"longitude\": 76.54\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/cities",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "cities"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

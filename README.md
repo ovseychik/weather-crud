@@ -25,8 +25,7 @@ Persistence:
 Необходимо указать ключ API в переменных окружения. Это можно легко сделать через IntelliJ, изменив конфиграцию запуска,
 как показано на скриншоте.
 
-<img width="1610" alt="Screenshot 2024-12-15 at 18 39 12" src="https://github.com/user-attachments/assets/80762480-e40c-4383-8469-42edc9bf5a35" />
-
+![Screenshot 2024-12-15 at 18.39.12.png](_docs/Screenshot%202024-12-15%20at%2018.39.12.png)
 
 ## Из docker-compose
 
@@ -42,7 +41,7 @@ http://localhost:8080/webjars/swagger-ui/index.html
 
 # CI/CD
 
-Файл с описанием пайплайна лежит по пути: `.github/workflows/gradle.yaml`
+Файл с описанием пайплайна лежит в репозитории: [gradle.yaml](.github/workflows/gradle.yaml)
 
 В рамках пайплайна происходит:
 
@@ -53,3 +52,15 @@ http://localhost:8080/webjars/swagger-ui/index.html
 Для репозитория настроено автоматическое сканирование в SonarCloud. Актуальный отчёт сонара:
 
 [![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-highlight.svg)](https://sonarcloud.io/summary/new_code?id=ovseychik_weather-crud)
+
+# Бизнес-логика
+
+Есть два типа ендпонитов: для работы с городами и для работы с погодой
+
+Сначала необходимо добавить город, указав его географические координаты - широту и долготу. После этого можно работать с
+погодой, запрашивая текущую и прогноз до 7 дней включительно.
+
+Коллекции Postman:
+
+* cities: [Cities.postman_collection.json](_docs/Cities.postman_collection.json)
+* weather: [Weather.postman_collection.json](_docs/Weather.postman_collection.json)
