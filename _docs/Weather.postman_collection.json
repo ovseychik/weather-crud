@@ -1,0 +1,56 @@
+{
+  "info": {
+    "_postman_id": "7a707558-c72c-435a-8bf7-2305bc694ed1",
+    "name": "Weather",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "30117357"
+  },
+  "item": [
+    {
+      "name": "weather/current/{cityId}",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/weather/current/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "weather",
+            "current",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "weather/forecast/{cityId}",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/weather/current/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "weather",
+            "current",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

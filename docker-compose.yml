@@ -13,10 +13,23 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U weather_user -d weather_db"]
+      test: [ "CMD-SHELL", "pg_isready -U weather_user -d weather_db" ]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  app:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    build: .
+    container_name: weather-app
+    #   ДОБАВЬТЕ КЛЮЧ
+    environment:
+      - WEATHERAPI_KEY=add_key_here
+      - DB_HOST=postgres
+    ports:
+      - "8080:8080"
 
 volumes:
   postgres_data:
